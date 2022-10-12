@@ -1,14 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { CreateApartmentDto, IApartment } from "../interfaces/apartment.interface";
+import { CreateApartmentDto, IApartment, UpdateApartmentDto } from "../interfaces/apartment.interface";
 import { apartments } from "../api/apartments";
 
 @Injectable()
 export class ApartmentsService {
     private _apartmentsList: Array<IApartment> = [...apartments];
-    async getApartments(){
+    private _getSortedList(apartmentsList,priceSortType){
+      const sortedList = [...apartmentsList].sort((apartment1, apartment2) => {
+        if(apartment1.price > apartment2.price) return 1;
+        else if(apartment1.price < apartment2.price) return -1;
+        else return 0;
+      });
+      if(priceSortType === 'desc') sortedList.reverse();
+      return sortedList;
+    };
+
+    async getApartments(priceSort?: string, rooms?: string){
       return new Promise<IApartment[]>(resolve => {
         setTimeout(() => {
-          resolve(this._apartmentsList);
+          if(rooms){
+            if(priceSort) resolve(this._getSortedList(this._apartmentsList.filter(apartment => apartment.rooms === rooms), priceSort));
+            else resolve(this._apartmentsList.filter(apartment => apartment.rooms === rooms));
+          }
+          else if(!rooms && priceSort) resolve(this._getSortedList(this._apartmentsList, priceSort));
+          else resolve(this._apartmentsList);
         }, 1000);
       })
     };
@@ -21,11 +36,11 @@ export class ApartmentsService {
       })
     };
 
-    async insertApartment(apartment: CreateApartmentDto){
+    async insertApartment(apartmentDto: CreateApartmentDto){
       return new Promise<IApartment>(resolve => {
         const newApartment: IApartment = {
           id: `${Date.now()}`,
-          ...apartment,
+          ...apartmentDto,
           rented: false,
         };
         setTimeout(() => {
@@ -42,7 +57,18 @@ export class ApartmentsService {
           this._apartmentsList = this._apartmentsList.filter(apartment => apartment.id !== id);
         }, 1000)
       })
-    }
+    };
 
+    async updateApartment(apartmentDto: UpdateApartmentDto, id: string){
+        return new Promise<IApartment>(resolve => {
+            setTimeout(() => {
+              resolve(this._apartmentsList.splice(this._apartmentsList.findIndex(apartment => apartment.id === id),
+                1, {
+                id,
+                  ...apartmentDto,
+                })[0])
+            }, 1000)
+        })
+    };
 
 }
