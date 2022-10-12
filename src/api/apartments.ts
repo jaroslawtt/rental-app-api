@@ -1,4 +1,4 @@
-import { IApartment } from "../interfaces/apartment.interface";
+import { IApartment } from "../interfaces";
 
 
 export const apartments: Array<IApartment> = [

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApartmentsService } from "./apartments.service";
-import { CreateApartmentDto, UpdateApartmentDto } from "../interfaces/apartment.interface";
+import { CreateApartmentDto, UpdateApartmentDto } from "../interfaces";
 
 @Controller('apartments')
 export class ApartmentsController {

@@ -1,0 +1,3 @@
+
+
+export * from './apartment.interface'

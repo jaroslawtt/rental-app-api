@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateApartmentDto, IApartment, UpdateApartmentDto } from "../interfaces/apartment.interface";
-import { apartments } from "../api/apartments";
+import { CreateApartmentDto, IApartment, UpdateApartmentDto } from "../interfaces";
+import { apartments } from "../api";
 
 @Injectable()
 export class ApartmentsService {
