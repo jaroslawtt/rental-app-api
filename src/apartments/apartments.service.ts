@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateApartmentDto, UpdateApartmentDto } from "../interfaces";
+import { CreateApartmentDto, UpdateApartmentDto } from "../entities";
 import { PrismaService } from "../prisma.service";
+import { IApartment } from "../interfaces";
 
 @Injectable()
 export class ApartmentsService {
@@ -14,7 +15,7 @@ export class ApartmentsService {
     constructor(private prismaService: PrismaService) {
     }
 
-    async getApartments(priceSort?: string, rooms?: string){
+    async getApartments(priceSort?: string, rooms?: string): Promise<IApartment[]>{
         const apartmentsList = await this.prismaService.apartment.findMany();
         if(rooms){
             if(priceSort) return this._getSortedList(apartmentsList.filter(apartment => apartment.rooms === rooms), priceSort);
@@ -25,7 +26,7 @@ export class ApartmentsService {
     };
 
 
-    async getApartment(id: number){
+    async getApartment(id: number): Promise<IApartment>{
         return this.prismaService.apartment.findUnique({
             where: { id
             }
@@ -33,7 +34,7 @@ export class ApartmentsService {
     };
 
 
-    async insertApartment({name, rooms, price, days}: CreateApartmentDto){
+    async insertApartment({name, rooms, price, days}: CreateApartmentDto): Promise<IApartment>{
         return this.prismaService.apartment.create({
             data: {
                 name,
@@ -45,7 +46,7 @@ export class ApartmentsService {
     };
 
 
-    async removeApartment(id: number){
+    async removeApartment(id: number): Promise<IApartment>{
         return this.prismaService.apartment.delete({
             where: { id
             }
@@ -53,7 +54,7 @@ export class ApartmentsService {
     };
 
 
-    async updateApartment(apartmentDto: UpdateApartmentDto, id: number){
+    async updateApartment(apartmentDto: UpdateApartmentDto, id: number): Promise<IApartment>{
         return this.prismaService.apartment.update({
             where: {
                 id,
