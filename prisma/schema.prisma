@@ -7,5 +7,14 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("file:./dev.db")
+  url      =  "file:./dev.db"
+}
+
+model Apartment {
+    id    Int     @default(autoincrement()) @id
+    name String
+    rooms String
+    days Int
+    price Int
+    rented Boolean @default(false)
 }
