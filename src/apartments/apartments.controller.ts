@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query} from "@nestjs/common";
 import { ApartmentsService } from "./apartments.service";
 import { CreateApartmentDto, UpdateApartmentDto } from "../interfaces";
 
@@ -12,7 +12,7 @@ export class ApartmentsController {
     };
 
     @Get(`/:id`)
-    async getApartment(@Param(`id`) id){
+    async getApartment(@Param('id', ParseIntPipe) id: number){
         return await this.apartmentService.getApartment(id);
     };
 
@@ -22,12 +22,12 @@ export class ApartmentsController {
     };
 
     @Delete(`/:id`)
-    async deleteApartment(@Param('id') id){
+    async deleteApartment(@Param('id', ParseIntPipe) id: number){
         return await this.apartmentService.removeApartment(id);
     };
 
     @Put(`/:id`)
-    async updateApartment(@Body() body: UpdateApartmentDto, @Param(`id`) id){
+    async updateApartment(@Body() body: UpdateApartmentDto, @Param(`id`, ParseIntPipe) id){
        return await this.apartmentService.updateApartment(body, id);
     }
 }
