@@ -10,7 +10,7 @@ export class CreateApartmentDto {
     @Min(0)
     days: number;
     @Min(0)
-    @Max(9999)
+    @Max(99999)
     price: number;
 }
 
