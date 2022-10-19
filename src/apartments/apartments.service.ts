@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateApartmentDto, UpdateApartmentDto } from "../entities";
 import { PrismaService } from "../prisma.service";
-import { IApartment } from "../interfaces";
+import { Apartment } from "../entities";
 
 @Injectable()
 export class ApartmentsService {
@@ -15,7 +15,7 @@ export class ApartmentsService {
     constructor(private prismaService: PrismaService) {
     }
 
-    async getApartments(priceSort?: string, rooms?: string): Promise<IApartment[]>{
+    async getApartments(priceSort?: string, rooms?: string): Promise<Apartment[]>{
         const apartmentsList = await this.prismaService.apartment.findMany();
         if(rooms){
             if(priceSort) return this._getSortedList(apartmentsList.filter(apartment => apartment.rooms === rooms), priceSort);
@@ -26,7 +26,7 @@ export class ApartmentsService {
     };
 
 
-    async getApartment(id: number): Promise<IApartment>{
+    async getApartment(id: number): Promise<Apartment>{
         return this.prismaService.apartment.findUnique({
             where: { id
             }
@@ -34,7 +34,7 @@ export class ApartmentsService {
     };
 
 
-    async insertApartment({name, rooms, price, days}: CreateApartmentDto): Promise<IApartment>{
+    async insertApartment({name, rooms, price, days}: CreateApartmentDto): Promise<Apartment>{
         return this.prismaService.apartment.create({
             data: {
                 name,
@@ -46,7 +46,7 @@ export class ApartmentsService {
     };
 
 
-    async removeApartment(id: number): Promise<IApartment>{
+    async removeApartment(id: number): Promise<Apartment>{
         return this.prismaService.apartment.delete({
             where: { id
             }
@@ -54,7 +54,7 @@ export class ApartmentsService {
     };
 
 
-    async updateApartment(apartmentDto: UpdateApartmentDto, id: number): Promise<IApartment>{
+    async updateApartment(apartmentDto: UpdateApartmentDto, id: number): Promise<Apartment>{
         return this.prismaService.apartment.update({
             where: {
                 id,
