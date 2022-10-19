@@ -9,5 +9,4 @@ It's a simple web api made with nest framework for managing renting apartments m
 
 $ npm run start
 
-### watch mode
-$ npm run start:dev
+### http://localhost:3000/api - swagger
