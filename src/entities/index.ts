@@ -1,3 +1,3 @@
 
 
-export * from './apartment-dto.entity'
+export * from './apartments.entity'
