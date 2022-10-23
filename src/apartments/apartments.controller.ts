@@ -1,6 +1,7 @@
 import {Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, Query} from "@nestjs/common";
 import { ApartmentsService } from "./apartments.service";
-import { CreateApartmentDto, UpdateApartmentDto, Apartment } from "../entities";
+import { CreateApartmentDto, UpdateApartmentDto } from "./dto";
+import { Apartment } from "../entities";
 import {ApiOperation, ApiParam, ApiResponse} from "@nestjs/swagger";
 
 @Controller('apartments')
