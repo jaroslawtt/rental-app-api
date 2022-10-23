@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateApartmentDto, UpdateApartmentDto } from "./dto";
 import { PrismaService } from "../prisma.service";
 import { Apartment } from "../entities";
+import {JwtService} from "@nestjs/jwt";
 
 @Injectable()
 export class ApartmentsService {
@@ -12,43 +13,56 @@ export class ApartmentsService {
         return sortedList;
     };
 
-    constructor(private prismaService: PrismaService) {
+    constructor(private readonly prismaService: PrismaService, private readonly jwtService: JwtService) {
     }
 
-    async getApartments(priceSort?: string, rooms?: string): Promise<Apartment[]>{
-        const apartmentsList = await this.prismaService.apartment.findMany();
+    async getApartments(header: string, priceSort?: string, rooms?: string): Promise<Apartment[]>{
+        const username: string = this.jwtService.decode(header.split(` `)[1])[`username`];
+        const { apartments} = await this.prismaService.user.findUnique({
+            where: {
+                username,
+            },
+            include: {
+                apartments: true,
+            }
+        });
         if(rooms){
-            if(priceSort) return this._getSortedList(apartmentsList.filter(apartment => apartment.rooms === rooms), priceSort);
-            else return apartmentsList.filter(apartment => apartment.rooms === rooms);
+            if(priceSort) return this._getSortedList(apartments.filter(apartment => apartment.rooms === rooms), priceSort);
+            else return apartments.filter(apartment => apartment.rooms === rooms);
         }
-        else if(!rooms && priceSort) return this._getSortedList(apartmentsList, priceSort);
-        else return apartmentsList;
+        else if (!rooms && priceSort) return this._getSortedList(apartments, priceSort);
+        else return apartments;
     };
 
 
     async getApartment(id: number): Promise<Apartment>{
         return this.prismaService.apartment.findUnique({
-            where: { id
+            where: {
+                id,
             }
-        })
+        });
     };
 
 
-    async insertApartment({name, rooms, price, days}: CreateApartmentDto): Promise<Apartment>{
+    async insertApartment(dto: CreateApartmentDto, header: string): Promise<Apartment>{
+        const username: string = this.jwtService.decode(header.split(` `)[1])[`username`];
         return this.prismaService.apartment.create({
             data: {
-                name,
-                rooms,
-                price,
-                days,
+                ...dto,
+                user: {
+                    connect: {
+                        username,
+                    }
+                }
             }
-        })
+        });
     };
 
 
     async removeApartment(id: number): Promise<Apartment>{
         return this.prismaService.apartment.delete({
-            where: { id
+            where: {
+                id
             }
         })
     };

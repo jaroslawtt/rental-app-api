@@ -1,18 +1,34 @@
-import {Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, Query} from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    Put,
+    Query,
+    UseGuards,
+    Headers
+} from "@nestjs/common";
 import { ApartmentsService } from "./apartments.service";
-import { CreateApartmentDto, UpdateApartmentDto } from "./dto";
 import { Apartment } from "../entities";
 import {ApiOperation, ApiParam, ApiResponse} from "@nestjs/swagger";
+import { JWTGuard } from "./guards";
+import {CreateApartmentDto, UpdateApartmentDto} from "./dto";
 
 @Controller('apartments')
+@UseGuards(JWTGuard)
 export class ApartmentsController {
     constructor(private apartmentService: ApartmentsService) {
     }
     @Get(``)
     @ApiOperation({ summary: "Returns all apartments"})
     @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Array<Apartment>})
-    async getApartments(@Query(`price`) price, @Query(`rooms`) rooms): Promise<Array<Apartment>>{
-        return await this.apartmentService.getApartments(price,rooms);
+    async getApartments(@Query(`price`) price, @Query(`rooms`) rooms, @Headers(`Autorization`) autorization: string)
+        : Promise<Array<Apartment>>{
+        return await this.apartmentService.getApartments(autorization,price,rooms);
     };
 
     @Get(`/:id`)
@@ -26,10 +42,9 @@ export class ApartmentsController {
     @Post()
     @ApiOperation({ summary: "Inserts new apartment"})
     @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment})
-    async addApartment(@Body() body: CreateApartmentDto): Promise<Apartment>{
-        return await this.apartmentService.insertApartment(body);
+    async addApartment(@Body() body: CreateApartmentDto, @Headers(`Autorization`) autorization: string): Promise<Apartment>{
+        return await this.apartmentService.insertApartment(body, autorization);
     };
-
 
     @Delete(`/:id`)
     @ApiOperation({ summary: "Deletes apartment"})
