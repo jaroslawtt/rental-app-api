@@ -6,10 +6,8 @@ import { Apartment } from "../entities";
 @Injectable()
 export class ApartmentsService {
     private _getSortedList(apartmentsList,priceSortType){
-        const sortedList = [...apartmentsList].sort((apartment1, apartment2) => {if(apartment1.price > apartment2.price) return 1; else if(apartment1.price < apartment2.price) return -1; else return 0;
-        });
-        if(priceSortType === 'desc') sortedList.reverse();
-        return sortedList;
+        const sortedList = [...apartmentsList].sort((apartment1, apartment2) => apartment1.price - apartment2.price);
+        return priceSortType === 'desc' ? sortedList.reverse() : sortedList;
     };
 
     constructor(private prismaService: PrismaService) {
