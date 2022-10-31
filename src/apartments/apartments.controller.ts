@@ -8,39 +8,39 @@ export class ApartmentsController {
     constructor(private apartmentService: ApartmentsService) {
     }
     @Get(``)
-    @ApiOperation({ summary: "Returns all apartments"})
-    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Array<Apartment>})
-    async getApartments(@Query(`price`) price, @Query(`rooms`) rooms): Promise<Array<Apartment>>{
-        return await this.apartmentService.getApartments(price,rooms);
+    @ApiOperation({ summary: "Returns all apartments" })
+    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Array<Apartment> })
+    getApartments(@Query(`price`) price, @Query(`rooms`) rooms): Promise<Array<Apartment>> {
+        return this.apartmentService.getApartments(price,rooms);
     };
 
     @Get(`/:id`)
-    @ApiOperation({ summary: "Returns apartment with given id"})
+    @ApiOperation({ summary: "Returns apartment with given id" })
     @ApiParam({ name: "id", required: true, description: "Apartment identifier" })
-    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment})
-    async getApartment(@Param('id', ParseIntPipe) id: number): Promise<Apartment>{
-        return await this.apartmentService.getApartment(id);
+    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment })
+    getApartment(@Param('id', ParseIntPipe) id: number): Promise<Apartment> {
+        return this.apartmentService.getApartment(id);
     };
 
     @Post()
-    @ApiOperation({ summary: "Inserts new apartment"})
-    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment})
-    async addApartment(@Body() body: CreateApartmentDto): Promise<Apartment>{
-        return await this.apartmentService.insertApartment(body);
+    @ApiOperation({ summary: "Inserts new apartment" })
+    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment })
+    addApartment(@Body() body: CreateApartmentDto): Promise<Apartment> {
+        return this.apartmentService.insertApartment(body);
     };
 
 
     @Delete(`/:id`)
-    @ApiOperation({ summary: "Deletes apartment"})
-    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment})
-    async deleteApartment(@Param('id', ParseIntPipe) id: number): Promise<Apartment>{
-        return await this.apartmentService.removeApartment(id);
+    @ApiOperation({ summary: "Deletes apartment" })
+    @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment })
+    deleteApartment(@Param('id', ParseIntPipe) id: number): Promise<Apartment> {
+        return this.apartmentService.removeApartment(id);
     };
 
     @Put(`/:id`)
     @ApiOperation({ summary: "Updates details of apartment with given id" })
     @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Apartment})
-    async updateApartment(@Body() body: UpdateApartmentDto, @Param(`id`, ParseIntPipe) id): Promise<Apartment>{
-       return await this.apartmentService.updateApartment(body, id);
+    updateApartment(@Body() body: UpdateApartmentDto, @Param(`id`, ParseIntPipe) id): Promise<Apartment> {
+       return this.apartmentService.updateApartment(body, id);
     }
 }
